@@ -25,7 +25,7 @@ func main() {
 
 	templateCache, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Fatal("cannot create templateCache")
+		log.Fatal("cannot create templateCache", err)
 	}
 
 	session = scs.New()

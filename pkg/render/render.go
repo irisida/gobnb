@@ -10,6 +10,7 @@ import (
 
 	"github.com/irisida/gobnb/pkg/config"
 	"github.com/irisida/gobnb/pkg/models"
+	"github.com/justinas/nosurf"
 )
 
 // map of functions that can be used in a template
@@ -24,12 +25,13 @@ func NewTemplates(a *config.AppConfig) {
 
 // AddDefaultData accepts and returns a templatedata type. This routine
 // should be used to add any required default data.
-func AddDefaultData(templateData *models.TemplateData) *models.TemplateData {
+func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.TemplateData {
+	templateData.CSRFToken = nosurf.Token(r)
 	return templateData
 }
 
 // renderTemplate renders temples using html.template
-func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templateData *models.TemplateData) {
 	var templateCache map[string]*template.Template
 
 	// get the templateCache from the app.config when
@@ -48,7 +50,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *models.Tem
 	// create a buffer, prepare the data that will be inserted by
 	// passing it to the default data handler and execute the template.
 	buf := new(bytes.Buffer)
-	templateData = AddDefaultData(templateData)
+	templateData = AddDefaultData(templateData, r)
 	_ = t.Execute(buf, templateData)
 
 	_, err := buf.WriteTo(w)
