@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/irisida/gobnb/pkg/config"
-	"github.com/irisida/gobnb/pkg/models"
+	"github.com/irisida/gobnb/internal/config"
+	"github.com/irisida/gobnb/internal/models"
 	"github.com/justinas/nosurf"
 )
 

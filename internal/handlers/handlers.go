@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/irisida/gobnb/pkg/config"
-	"github.com/irisida/gobnb/pkg/models"
-	"github.com/irisida/gobnb/pkg/render"
+	"github.com/irisida/gobnb/internal/config"
+	"github.com/irisida/gobnb/internal/models"
+	"github.com/irisida/gobnb/internal/render"
 )
 
 // Repository type definition
@@ -65,7 +67,7 @@ func (m *Repository) Parisian(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "availability.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, r, "search-availability.page.tmpl", &models.TemplateData{})
 }
 
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
@@ -80,5 +82,26 @@ func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 	end := r.Form.Get("end")
 
 	w.Write([]byte(fmt.Sprintf("start date: %s  end date: %s", start, end)))
+}
+
+type jsonResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+// json responses
+func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
+	resp := jsonResponse{
+		OK:      true,
+		Message: "Available",
+	}
+
+	out, err := json.MarshalIndent(resp, "", "    ")
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
 
 }
