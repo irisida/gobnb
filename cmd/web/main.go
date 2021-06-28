@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/irisida/gobnb/pkg/config"
-	"github.com/irisida/gobnb/pkg/handlers"
-	"github.com/irisida/gobnb/pkg/render"
+	"github.com/irisida/gobnb/internal/config"
+	"github.com/irisida/gobnb/internal/handlers"
+	"github.com/irisida/gobnb/internal/render"
 )
 
 const portNumber = ":8080"

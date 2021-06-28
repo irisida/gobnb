@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/irisida/gobnb/internal/config"
+	"github.com/irisida/gobnb/internal/forms"
 	"github.com/irisida/gobnb/internal/models"
 	"github.com/irisida/gobnb/internal/render"
 )
@@ -51,7 +52,48 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) Booking(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "booking.page.tmpl", &models.TemplateData{})
+	var emptyBooking models.Booking
+	data := make(map[string]interface{})
+	data["booking"] = emptyBooking
+
+	render.RenderTemplate(w, r, "booking.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+		Data: data,
+	})
+}
+
+// PostBooking handles the posting of a booking form
+func (m *Repository) PostBooking(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	booking := models.Booking{
+		Firstname: r.Form.Get("firstname"),
+		Lastname:  r.Form.Get("lastname"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	form := forms.New(r.PostForm)
+
+	form.Required("firstname", "lastname", "email")
+	form.MinLength("firstname", 3, r)
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["booking"] = booking
+
+		render.RenderTemplate(w, r, "booking.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+
+		return
+	}
 }
 
 func (m *Repository) Americana(w http.ResponseWriter, r *http.Request) {

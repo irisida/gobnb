@@ -8,22 +8,47 @@
         <div class="col">
             <h1>Booking</h1>
 
-            <form action="" method="POST" class="needs-validation" novalidate>
+            {{$res := index .Data "booking"}}
+
+            <form action="/booking" method="POST" class="" novalidate>
+                <!-- CSRF Token -->
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
                 <div class="form-group mt-5">
-                    <label for="first-name">First name</label>
-                    <input type="text" class="form-control" name="first-name" id="first-name" required>
+                    <label for="firstname">First name</label>
+                    <!-- firtname error message handler for template -->
+                    {{with .Form.Errors.Get "firstname"}}
+                    <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input type="text" class="form-control {{with .Form.Errors.Get "firstname"}} is-invalid {{end}}"
+                        name="firstname" id="firstname" value="{{$res.Firstname}}" required>
                 </div>
                 <div class="form-group">
-                    <label for="last-name">Last name</label>
-                    <input type="text" class="form-control" name="last-name" id="last-name" required>
+                    <label for="lastname">Last name</label>
+                    <!-- lastname error message handler for template -->
+                    {{with .Form.Errors.Get "lastname"}}
+                    <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input type="text" class="form-control {{with .Form.Errors.Get "lastname"}} is-invalid {{end}}"
+                        name="lastname" id="lastname" value="{{$res.Lastname}}" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" name="email" id="email" required>
+                    <!-- email error message handler for template -->
+                    {{with .Form.Errors.Get "email"}}
+                    <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input type="email" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}"
+                        name="email" id="email" value="{{$res.Email}}" required>
                 </div>
                 <div class="form-group">
-                    <label for="telephone">Tel</label>
-                    <input type="tel" class="form-control" name="telephone" id="telephone" required>
+                    <label for="phone">Tel</label>
+                    <!-- phoe error message handler for template -->
+                    {{with .Form.Errors.Get "phone"}}
+                    <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input type="tel" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}"
+                        name="phone" id="phone" value="{{$res.Phone}}" required>
                 </div>
                 <hr>
                 <input type="submit" class="btn btn-primary" value="Make Reservation">
